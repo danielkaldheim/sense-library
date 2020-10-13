@@ -55,7 +55,15 @@ SenseBLE::SenseBLE()
 
 void SenseBLE::begin(void)
 {
+    #if defined(DEBUG)
     Serial.println("BLE begin");
+    Serial.printf("\n****Before BLEDevice::deinit ESP.getFreeHeap() %u\n", ESP.getFreeHeap());
+    #endif
+    esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
+    BLEDevice::deinit(false);
+    #if defined(DEBUG)
+    Serial.printf("\n****After BLEDevice::deinit ESP.getFreeHeap() %u\n", ESP.getFreeHeap());
+    #endif
 
     BLEDevice::init(Sense::getDeviceName().c_str());
 
@@ -94,7 +102,9 @@ void SenseBLE::begin(void)
     // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 
     BLEDevice::startAdvertising();
+    #if defined(DEBUG)
     Serial.println("Waiting a client connection to notify...");
+    #endif
 
 #ifdef SCAN_BLE_DEVICES
     pBLEScan = BLEDevice::getScan(); //create new scan
@@ -130,6 +140,7 @@ void SenseBLE::setMQTTClient(PubSubClient MQTTClient)
 
 SenseBLE::~SenseBLE()
 {
+    BLEDevice::deinit(false);
 }
 
 void SenseBLE::deviceInformationService(BLEAdvertising *pAdvertising)
@@ -220,19 +231,21 @@ void sendDevice(BLEAdvertisedDevice advertisedDevice)
 
 void SenseBLE::loop()
 {
-    #ifdef COMP_BATTERY
+#ifdef COMP_BATTERY
     if (deviceConnected)
     {
         bService->notify();
         delay(500); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
     }
-    #endif
+#endif
 
     if (!deviceConnected && oldDeviceConnected)
     {
         delay(500);                    // give the bluetooth stack the chance to get things ready
         m_pServer->startAdvertising(); // restart advertising
+        #if defined(DEBUG)
         Serial.println("start advertising");
+        #endif
         oldDeviceConnected = deviceConnected;
     }
     // connecting

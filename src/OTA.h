@@ -8,6 +8,7 @@
 
 #ifndef COMPONENTS_SENSE_OTA_H_
 #define COMPONENTS_SENSE_OTA_H_
+#if defined(ENABLE_OTA)
 
 #include <Arduino.h>
 #include <SenseConfig.h>
@@ -47,4 +48,5 @@ public:
 extern OTAHTTPUpdate otahttpUpdate;
 #endif
 
+#endif
 #endif // COMPONENTS_SENSE_OTA_H_

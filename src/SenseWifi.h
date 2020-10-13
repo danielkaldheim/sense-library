@@ -12,7 +12,9 @@
 #include <SenseConfig.h>
 #include <Sense.h>
 #include <WiFi.h>
+#if defined(ENABLE_OTA)
 #include <OTA.h>
+#endif
 extern "C"
 {
 #include "esp_wifi.h"
@@ -29,6 +31,7 @@ public:
   virtual ~SenseWifi();
   void begin(void);
   bool connected();
+
 private:
   WiFiEventCb _wifiEventCallback;
 }; // SenseWifi

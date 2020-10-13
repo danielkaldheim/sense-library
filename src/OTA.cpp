@@ -1,5 +1,5 @@
 #include "OTA.h"
-
+#if defined(ENABLE_OTA)
 // OTA::OTA(WiFiClientSecure client)
 OTA::OTA(WiFiClient client)
 {
@@ -135,4 +135,5 @@ HTTPUpdateResult OTAHTTPUpdate::update(WiFiClient &client, const String &host, u
 
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_OTAHTTPUPDATE)
 OTAHTTPUpdate otahttpUpdate;
+#endif
 #endif

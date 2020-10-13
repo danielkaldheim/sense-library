@@ -23,9 +23,9 @@ String Sense::getChipName()
     uint64_t chipid = ESP.getEfuseMac();
 
     char chipName[32];
-    sprintf(chipName, "SystemAir-%04X",
+    sprintf(chipName, "-%04X",
             (uint16_t)(chipid >> 32));
-    return String(chipName);
+    return String(STR(PROJECT)) + chipName;
 }
 
 String Sense::getDeviceName()
@@ -114,14 +114,15 @@ String Sense::getMQTTTopic()
     String deviceID = getDevice();
     if (!tenantID.isEmpty() && !deviceID.isEmpty())
     {
-        return "systemair/" + deviceID + "/";
+        return String(STR(PROJECT)) + "/" + deviceID + "/";
     }
 
     uint64_t chipid = ESP.getEfuseMac();
     char chipName[32];
-    sprintf(chipName, "systemair/%04X/",
+    sprintf(chipName, "/%04X/",
             (uint16_t)(chipid >> 32));
-    return getString("mqtt-topic", String(chipName));
+
+    return getString("mqtt-topic", String(STR(PROJECT)) + chipName);
 }
 
 void Sense::setMQTTTopic(String value)

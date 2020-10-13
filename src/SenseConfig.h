@@ -7,6 +7,7 @@
 
 // WIP: Embed on build time...
 // https://letsencrypt.org/certs/isrgrootx1.pem.txt
+#ifndef OTA_ROOT_CA
 #define OTA_ROOT_CA                                                      \
     "-----BEGIN CERTIFICATE-----\n"                                      \
     "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw\n" \
@@ -39,6 +40,7 @@
     "mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d\n" \
     "emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=\n" \
     "-----END CERTIFICATE-----\n"
+#endif
 
 #ifndef PREFERENCES_KEY
 #define PREFERENCES_KEY "sense-dc"

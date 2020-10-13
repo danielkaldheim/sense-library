@@ -4,6 +4,7 @@ TimerHandle_t wifiReconnectTimer;
 int WiFiReconnectAttempts = 0;
 String hostname;
 
+#if defined(ENABLE_OTA)
 void checkOTA()
 {
     String token = Sense::getCrudusToken();
@@ -22,11 +23,41 @@ void checkOTA()
         Serial.println("No token or No WiFi, don't check OTA");
     }
 }
+#endif
+
+void setClock()
+{
+    configTime(gmtOffset_sec, daylightOffset_sec, "pool.ntp.org", "time.nist.gov"); // UTC
+#if defined(DEBUG)
+    Serial.print(F("Waiting for NTP time sync: "));
+#endif
+    time_t now = time(nullptr);
+    while (now < 8 * 3600 * 2)
+    {
+        yield();
+        delay(500);
+#if defined(DEBUG)
+        Serial.print(F("."));
+#endif
+        now = time(nullptr);
+    }
+
+    struct tm timeinfo;
+    gmtime_r(&now, &timeinfo);
+#if defined(DEBUG)
+    Serial.println(F(""));
+    Serial.print(F("Current time: "));
+    Serial.print(asctime(&timeinfo));
+#endif
+}
 
 void connectToWifi()
 {
     String wiFiSSID = Sense::getWiFiSSID();
     String wiFiSSIDPwd = Sense::getWiFiPwd();
+
+    Serial.println(wiFiSSID);
+    Serial.println(wiFiSSIDPwd);
 
     if (wiFiSSID.length() > 0 && wiFiSSIDPwd.length() > 0)
     {
@@ -49,13 +80,17 @@ void connectToWifi()
     }
     else
     {
+#if defined(DEBUG)
         Serial.print("No credentials, don't connect to WiFi");
+#endif
     }
 }
 
 void WiFiEvent(WiFiEvent_t event)
 {
+#if defined(DEBUG)
     Serial.printf("[WiFi-event] event: %d\n", event);
+#endif
     switch (event)
     {
     case SYSTEM_EVENT_STA_GOT_IP:
@@ -65,7 +100,10 @@ void WiFiEvent(WiFiEvent_t event)
         Serial.println(WiFi.localIP());
 #endif
         WiFiReconnectAttempts = 0;
+        setClock();
+#if defined(ENABLE_OTA)
         checkOTA();
+#endif
         break;
     case SYSTEM_EVENT_STA_DISCONNECTED:
 #if defined(DEBUG)
