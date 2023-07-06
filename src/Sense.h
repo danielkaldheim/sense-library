@@ -20,6 +20,7 @@ public:
     bool begin(void);
 
     static String getChipName();
+    static String getChipId();
     static String getDeviceName();
     static void setDeviceName(String value);
     static String getWiFiMac();

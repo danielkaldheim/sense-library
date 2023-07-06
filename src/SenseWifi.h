@@ -37,3 +37,5 @@ private:
 }; // SenseWifi
 
 #endif // COMPONENTS_SENSE_WIFI_H_
+
+void setClock();

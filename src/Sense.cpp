@@ -28,6 +28,15 @@ String Sense::getChipName()
     return String(STR(PROJECT)) + chipName;
 }
 
+String Sense::getChipId()
+{
+    uint64_t chipid = ESP.getEfuseMac();
+    char chipName[32];
+    sprintf(chipName, "%04X",
+            (uint16_t)(chipid >> 32));
+    return String(chipName);
+}
+
 String Sense::getDeviceName()
 {
     return getString("deviceName", getChipName());

@@ -9,11 +9,11 @@
 #define COMPONENTS_SENSE_BLE_H_
 
 #include <Arduino.h>
+#if defined(CONFIG_BT_ENABLED)
 #include <SenseConfig.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <Sense.h>
-#if defined(CONFIG_BT_ENABLED)
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEAdvertisedDevice.h>
